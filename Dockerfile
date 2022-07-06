@@ -7,7 +7,8 @@ COPY package.json package-lock.json ./
 # Only for deevelopment
 FROM base as dev
 
-RUN npm install
+# TODO: find a way for WebStorm to read node_modules from docker images
+# RUN npm install
 
 EXPOSE 3000
 EXPOSE 3001
