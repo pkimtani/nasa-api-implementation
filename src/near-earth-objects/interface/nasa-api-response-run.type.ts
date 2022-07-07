@@ -36,7 +36,7 @@ const MissDistance = RT.Record({
   miles: RT.String,
 });
 
-const CloseApproachDate = RT.Record({
+const CloseApproachData = RT.Record({
   close_approach_date: RT.String,
   close_approach_date_full: RT.String,
   epoch_date_close_approach: RT.Number,
@@ -47,14 +47,14 @@ const CloseApproachDate = RT.Record({
 
 const NearEarthObject = RT.Record({
   links: SelfLinks,
-  id: RT.Number,
-  neo_reference_id: RT.Number,
+  id: RT.String,
+  neo_reference_id: RT.String,
   name: RT.String,
   nasa_jpl_url: RT.String,
   absolute_magnitude_h: RT.Number,
   estimated_diameter: EstimatedDiameter,
   is_potentially_hazardous_asteroid: RT.Boolean,
-  close_approach_data: CloseApproachDate,
+  close_approach_data: RT.Array(CloseApproachData),
   is_sentry_object: RT.Boolean,
 });
 

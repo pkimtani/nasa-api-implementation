@@ -5,27 +5,38 @@ import {
   NasaApiResponseRunType,
 } from './interface/nasa-api-response-run.type';
 import { ConfigService } from '../config/config.service';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class NasaClient {
+  private readonly logger = new Logger(NasaClient.name);
+
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {}
 
-  async getNearAsteroids(
-    startDate: string,
-    endDate: string,
+  async getNearEarthObjects(
+    startDate: Date,
+    endDate: Date,
   ): Promise<NasaApiResponse> {
     try {
       const response$ = this.httpService
-        .get(this.apiUrl(startDate, endDate))
+        .get(
+          this.apiUrl(
+            startDate.toISOString().split('T')[0],
+            endDate.toISOString().split('T')[0],
+          ),
+        )
         .pipe(timeout(30000));
       const response = await lastValueFrom(response$);
       return NasaApiResponseRunType.check(response.data);
     } catch (error) {
-      return error;
+      this.logger.error(error);
+      throw new HttpException(
+        'Failed to fetch data from Nasa API',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
